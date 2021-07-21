@@ -10,21 +10,26 @@ JUPYTER="no"
 PORT=8080
 DESTROY="no"
 CONDALIBS=""
+BRANCH=""
 function help {
 	echo "Usage: octopython.sh"
+	echo "The minimum arguments required are to specify the link to the github repo you wish to instantiate"
+	echo "Specifying the number of workers also requires to input a manager name"
 	echo "Command line options:"
-	echo "-w|--workers: specify the number of workers desired"
-	echo "-wc|--worker-cores: specify the cores of each worker"
-	echo "-wm|--worker-memory: specify the memory of each worker"
-	echo "-wd|--worker-disk: specify the disk of each worker"
-	echo "-n|--name: specify the name of the workqueue"
-	echo "-l|--link: specify the link to the github repo"
-	echo "-p|--port: specify jupyter port"
-	echo "-d|--destroy: destroys the local git repo and conda enviroment if set"
-	echo "-c|--condalibs: specify additional conda libs (place in quotes)"
-	echo "-j|--jupyter: initialize a jupyter notebook of the provided repo" 
+	echo "	-l|--link: specify the link to the github repo\n"
+	echo "	-b|--branch: specifiy the branch of a githubrepo"
+	echo "	-w|--workers: specify the number of workers desired"
+	echo "	-wc|--worker-cores: specify the cores of each worker"
+	echo "	-wm|--worker-memory: specify the memory of each worker"
+	echo "	-wd|--worker-disk: specify the disk of each worker"
+	echo "	-n|--name: specify the name of the workqueue\n"
+	echo "	-d|--destroy: if this argument is set, the program destroys the local git repo and conda enviroment"
+	echo "	-c|--condalibs: specify additional conda libs (place in quotes)"
+	echo "	-j|--jupyter: if this argument is set, the program initializes a jupyter notebook of the provided repo" 
+	echo "	-p|--port: specify jupyter port"
 	exit 1
 }
+# parse command line arguments
 while [[ $# -gt 0 ]]; do
 	key="$1"
 	case $key in
@@ -75,7 +80,6 @@ while [[ $# -gt 0 ]]; do
 		-j|jupyter)
 			JUPYTER="yes"
 			shift
-			shift
 			;;
 		-h|--help)
 			help
@@ -87,6 +91,7 @@ while [[ $# -gt 0 ]]; do
 			;;
 	esac
 done
+# check if the user has conda installed. If the user does not have conda, then ask them if they wish to install it
 source ~/miniconda3/etc/profile.d/conda.sh
 if [[ !  `command -v conda` == "conda" ]] ; then
 	echo "****Error: Conda not detected"
@@ -103,14 +108,17 @@ if [[ !  `command -v conda` == "conda" ]] ; then
 	bash /tmp/conda-install.sh
 	source ~/miniconda3/etc/profile.d/conda.sh
 fi
+# exit if the user does not provide an input github repo
 if [[ "$LINK" == "" ]]; then
 	echo "Error: must specify a github repo to pull from"
 	exit 2
 fi
+# if the user asks for workers but does not specify a manager name, then quit
 if [ "$NAME" == "" ] && [ ! "$WORKERS" == 0 ]; then
 	echo "Error: Please enter a manager name when requesting workers"
 	exit 4
 fi
+# if the user specifies properites of the workers but does not give them a name or specify how many, exit
 if [ ! "$CORES" == "" ] || [ ! "$MEMORY" == "" ] || [ ! "$DISK" == "" ]; then
 	if [ "$NAME" == "" ]; then
 		echo "Error: Please enter a manager name when requesting workers"
@@ -121,12 +129,19 @@ if [ ! "$CORES" == "" ] || [ ! "$MEMORY" == "" ] || [ ! "$DISK" == "" ]; then
 	exit 5
 	fi
 fi
-gitpath=(${LINK///// })
-foldername=(${gitpath[1]//./ })
-echo "****Cloning git repository to local directory $REPOBASE/$foldername"
-git clone $LINK $REPOBASE/$foldername
-cd $REPOBASE/$foldername
-FILE=$REPOBASE/$foldername/environment.yml
+# seperate out the name of the github repo to be used as the name of the local directory
+GITPATH=(${LINK///// })
+FOLDERNAME=(${GITPATH[1]//./ })
+echo "****Cloning git repository to local directory $REPOBASE/$FOLDERNAME"
+if [[ "$BRANCH" == "" ]]; then
+	git clone $LINK $REPOBASE/$FOLDERNAME
+else
+	git clone -b $BRANCH $LINK $REPOBASE/$FOLDERNAME
+fi
+cd $REPOBASE/$FOLDERNAME
+FILE=$REPOBASE/$FOLDERNAME/environment.yml
+# check if there is a local environment.yml file. If there is, then we can use that to determine the conda libraries required
+# if such a file does not exist, then we check if the user provided libraries as a command line input
 if [ ! -f "$FILE" ] && [ "$CONDALIBS" == "" ]; then
 	echo "Error: git repo does not have environment.yml or you did not specify the conda libraries required"
 	exit 3
@@ -143,14 +158,17 @@ if [ ! "$CONDALIBS" == "" ]; then
 	echo "****Installing additional conda libraries"
 	conda install -y -c $CONDALIBS
 fi
-SETUP=$REPOBASE/$foldername/setup.py
+# special case for installing topEFT
+SETUP=$REPOBASE/$FOLDERNAME/setup.py
 if [ -f "$SETUP" ] ; then
 	pip install -e .
 fi
 if [[ "$NAME" != "" ]]; then
+	echo "Submitting $WORKERS workers to manager $NAME"
 	condor_submit_workers --manager-name $NAME --cores $CORES --memory $MEMORY --disk $DISK $WORKERS
 fi
 if [ "$JUPYTER" == "yes" ]; then
+	echo "Initializing jupyter notebook on port $PORT"
 	jupyter notebook --no-browser --port=$PORT
 else
 	echo "Github repo has been initalized at $REPOBASE with local conda environment ./env"
@@ -165,5 +183,5 @@ fi
 conda deactivate
 if [ "$DESTROY" == "yes" ]; then
 	cd $REPOBASE
-	rm -frd $foldername
+	rm -frd $FOLDERNAME
 fi
