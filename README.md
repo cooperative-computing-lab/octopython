@@ -1,4 +1,4 @@
-### LoGiC : Local Github repo Connector
+### LoGiCC : Local Github repo Creator and Connector
 ----------------------------------------
 This is a program that allows you to specify the link to a github repo and then automatically download that repo to a local directory
 The program then creates a custom conda environment to run the repo locally, based either on an environment.yml file or use provided libraries
@@ -92,3 +92,19 @@ Then paste the following into your browser (replacing port with its value)
 ```http://localhost:<PORT>/tree?```
 
 And it will grant you access to the jupyter notebook running your github repo!
+
+### TopCoffea specific instructions
+
+Run the following command to download TopCoffea and create a conda environment
+
+```./octopython.sh -l git@github.com:TopEFT/topcoffea.git -c "conda-forge ndcctools conda-pack dill xrootd coffea" -d -w 5 -n ${USER}-workqueue-coffea```
+
+Once it is finished, open a new terminal and ```cd /tmp/${USER}/Octopython/topcoffea```
+
+Then, activate the conda environment with ```conda activate ./env```
+
+Then, ```cd analysis/topEFT``` 
+
+Then, ```python run.py ../../topcoffea/cfg/your_cfg.cfg```
+
+Killing the first terminal will then clean up all local files created
