@@ -81,14 +81,14 @@ Breakdown of the command above:
 
 ### Note: Accessing jupyter over SSH
 
-Run the following command in another terminal in order to be able to access your jupyter notebook remotely
+Run the following command in another terminal in order to be able to access your jupyter notebook remotely (replacing port, user, and remote machine with their respective values)
 
-```ssh -N -L 8080:localhost:8080 <user>@<remotemachine>```
+```ssh -N -L <PORT>:localhost:<PORT> <user>@<remotemachine>```
 
 And log into the machine
 
-Then paste the following into your browser
+Then paste the following into your browser (replacing port with its value)
 
-```http://localhost:8080/tree?```
+```http://localhost:<PORT>/tree?```
 
 And it will grant you access to the jupyter notebook running your github repo!
