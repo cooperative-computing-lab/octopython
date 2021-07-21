@@ -63,6 +63,11 @@ while [[ $# -gt 0 ]]; do
 			shift
 			shift
 			;;
+		-b|--branch)
+			LINK="$2"
+			shift
+			shift
+			;;
 		-p|--port)
 			PORT="$2"
 			shift
