@@ -1,9 +1,9 @@
-###Octopython Local Github Repo Instantiater
+### Octopython Local Github Repo Instantiater
 ----------------------------------------
 This is a program that allows you to specify the link to a github repo and then automatically download that repo to a local directory
 The program then creates a custom conda environment to run the repo locally, based either on an environment.yml file or used provided libraries
 
-###Command line arguments:
+### Command line arguments:
 
 Note: The minumum input to the program is the link to the github repo you wish to instantiate
 
@@ -51,7 +51,7 @@ example: -c "conda-forge ndcctools conda-pack dill xrootd coffea"
 ```
 example: -p 8080
 
-###Example runthrough of the program:
+### Example runthrough of the program:
 
 This shows instantiating the octopython branch of the github repo git@github.com:cooperative-computing-lab/work-queue-interactive.git
 
