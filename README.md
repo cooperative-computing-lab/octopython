@@ -57,21 +57,23 @@ Example runthrough of the program:
 This shows instantiating the octopython branch of the github repo git@github.com:cooperative-computing-lab/work-queue-interactive.git
 
 First this program must be downloaded
-
+```
 git clone https://github.com/cooperative-computing-lab/octopython
-
+```
+```
 cd octopython
-
+```
+```
 ./octopython.sh -l git@github.com:cooperative-computing-lab/work-queue-interactive.git -b octopython -j -d -w 5 -n octo
-
+```
 Breakdown of the command above:
 
--l specifies the link to the repo we wish to download
+```-l``` specifies the link to the repo we wish to download
 
--b specifies we want to octopython branch
+```-b``` specifies we want to octopython branch
 
--j will create a jupyter notebook for us of the repo
+```-j``` will create a jupyter notebook for us of the repo
 
--d will destroy the local files we created after we run the program
+```-d``` will destroy the local files we created after we run the program
 
--w will create 5 workers for us on the manager name octo that we specified with -n
+```-w``` will create 5 workers for us on the manager name octo that we specified with -n
