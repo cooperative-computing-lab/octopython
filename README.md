@@ -9,8 +9,10 @@ Command line arguments:
 Note: The minumum input to the program is the link to the github repo you wish to instantiate
 
 Also: Specifying the number of workers also requires a manager name
+```
 
 -l|--link: specify the link to the github repo
+```
 
 example: -l https://github.com/cooperative-computing-lab/work-queue-interactive/tree/octopython
 
