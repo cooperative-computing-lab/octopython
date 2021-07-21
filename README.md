@@ -5,11 +5,17 @@ This is a program that allows you to specify the link to a github repo and then 
 The program then creates a custom conda environment to run the repo locally, based either on an environment.yml file or used provided libraries
 
 Command line arguments:
+
 Note: The minumum input to the program is the link to the github repo you wish to instantiate
+
 Also: Specifying the number of workers also requires a manager name
+
 -l|--link: specify the link to the github repo
+
 example: -l https://github.com/cooperative-computing-lab/work-queue-interactive/tree/octopython
+
 -b|--branch: specify the branch of a github repo
+
 example: -b octopython
 
 -w|--workers: specify the number of workers desired
