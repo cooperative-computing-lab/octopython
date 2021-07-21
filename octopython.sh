@@ -64,7 +64,7 @@ while [[ $# -gt 0 ]]; do
 			shift
 			;;
 		-b|--branch)
-			LINK="$2"
+			BRANCH="$2"
 			shift
 			shift
 			;;
@@ -170,7 +170,11 @@ if [ -f "$SETUP" ] ; then
 fi
 if [[ "$NAME" != "" ]]; then
 	echo "Submitting $WORKERS workers to manager $NAME"
-	condor_submit_workers --manager-name $NAME --cores $CORES --memory $MEMORY --disk $DISK $WORKERS
+	if [ ! "$CORES" == "" ] || [ ! "$MEMORY" == "" ] || [ ! "$DISK" == "" ]; then
+		condor_submit_workers --manager-name $NAME --cores $CORES --memory $MEMORY --disk $DISK $WORKERS
+	else
+		condor_submit_workers --manager-name $NAME $WORKERS
+	fi
 fi
 if [ "$JUPYTER" == "yes" ]; then
 	echo "Initializing jupyter notebook on port $PORT"
