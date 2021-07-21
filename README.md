@@ -53,7 +53,7 @@ example: -p 8080
 
 ### Example runthrough of the program:
 
-This shows instantiating the octopython branch of the github repo git@github.com:cooperative-computing-lab/work-queue-interactive.git
+This shows instantiating the octopython branch of the github repo https://github.com/cooperative-computing-lab/work-queue-interactive/tree/main
 
 First this program must be downloaded
 ```
