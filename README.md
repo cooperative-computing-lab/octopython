@@ -59,9 +59,11 @@ First this program must be downloaded
 ```
 git clone https://github.com/cooperative-computing-lab/octopython
 ```
+Then change into the downloaded directory
 ```
 cd octopython
 ```
+Then run the command to instantiate the github repo
 ```
 ./octopython.sh -l git@github.com:cooperative-computing-lab/work-queue-interactive.git -b octopython -j -d -w 5 -n octo
 ```
