@@ -1,7 +1,7 @@
 ### Octopython Local Github Repo Instantiater
 ----------------------------------------
 This is a program that allows you to specify the link to a github repo and then automatically download that repo to a local directory
-The program then creates a custom conda environment to run the repo locally, based either on an environment.yml file or used provided libraries
+The program then creates a custom conda environment to run the repo locally, based either on an environment.yml file or use provided libraries
 
 ### Command line arguments:
 
@@ -78,3 +78,17 @@ Breakdown of the command above:
 ```-d``` will destroy the local files we created after we run the program
 
 ```-w``` will create 5 workers for us on the manager name octo that we specified with -n
+
+### Note: Accessing jupyter over SSH
+
+Run the following command in another terminal in order to be able to access your jupyter notebook remotely
+
+```ssh -N -L 8080:localhost:8080 <user>@<remotemachine>```
+
+And log into the machine
+
+Then paste the following into your browser
+
+```http://localhost:8080/tree?```
+
+And it will grant you access to the jupyter notebook running your github repo!
