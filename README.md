@@ -108,3 +108,5 @@ Then, ```cd analysis/topEFT```
 Then, ```python run.py ../../topcoffea/cfg/your_cfg.cfg```
 
 Killing the first terminal will then clean up all local files created
+### Octopython diagram
+![octopython diagram and name brainstorm](https://user-images.githubusercontent.com/31227025/126818352-9fd06c13-55a2-4876-adaa-11576cf08077.png)
