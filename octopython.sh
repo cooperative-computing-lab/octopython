@@ -184,12 +184,10 @@ if [ "$JUPYTER" == "yes" ]; then
 	jupyter notebook --no-browser --port=$PORT
 else
 	echo "Github repo has been initalized at $REPOBASE with local conda environment ./env"
-	echo "Control c this terminal when finished and it will be cleaned up"
-	keepgoing=1
-	trap 'echo "sigint"; keepgoing=0; ' SIGINT
-	while (( keepgoing )); do
-		sleep 5
-	done
+	echo "You are now in a local copy of your git repo with a conda environment activated"
+	echo "Type 'conda activate ./env' to activate the conda environment, type exit to quit out of this program"
+	cd $REPOBASE/$FOLDERNAME 
+	bash 
 	echo "Program exiting: deleting local files"
 fi
 conda deactivate
