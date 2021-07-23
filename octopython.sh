@@ -1,9 +1,9 @@
 #!/bin/bash
 REPOBASE=/tmp/$USER/Octopython
 WORKERS=0
-CORES=""
-MEMORY=""
-DISK=""
+CORES=0
+MEMORY=0
+DISK=0
 NAME=""
 LINK=""
 JUPYTER="no"
@@ -11,6 +11,9 @@ PORT=8080
 DESTROY="no"
 CONDALIBS=""
 BRANCH=""
+SCRIPT=`realpath $0`
+SCRIPTPATH=`dirname $SCRIPT`
+CMDPID=""
 function help {
 	echo "Usage: octopython.sh"
 	echo "The minimum arguments required are to specify the link to the github repo you wish to instantiate"
@@ -124,7 +127,7 @@ if [ "$NAME" == "" ] && [ ! "$WORKERS" == 0 ]; then
 	exit 4
 fi
 # if the user specifies properites of the workers but does not give them a name or specify how many, exit
-if [ ! "$CORES" == "" ] || [ ! "$MEMORY" == "" ] || [ ! "$DISK" == "" ]; then
+if [ ! "$CORES" == 0 ] || [ ! "$MEMORY" == 0 ] || [ ! "$DISK" == 0 ]; then
 	if [ "$NAME" == "" ]; then
 		echo "Error: Please enter a manager name when requesting workers"
 		exit 5
@@ -170,10 +173,10 @@ if [ -f "$SETUP" ] ; then
 fi
 if [[ "$NAME" != "" ]]; then
 	echo "Submitting $WORKERS workers to manager $NAME"
-	if [ ! "$CORES" == "" ] || [ ! "$MEMORY" == "" ] || [ ! "$DISK" == "" ]; then
-		condor_submit_workers --manager-name $NAME --cores $CORES --memory $MEMORY --disk $DISK $WORKERS
+	if [ ! "$CORES" == 0 ] || [ ! "$MEMORY" == 0 ] || [ ! "$DISK" == 0 ]; then
+		python $SCRIPTPATH/octopus_factory.py $NAME $WORKERS $CORES $MEMORY $DISK & CMDPID=$! 
 	else
-		condor_submit_workers --manager-name $NAME $WORKERS
+		python $SCRIPTPATH/octopus_factory.py $NAME $WORKERS 1 1000 1000 & CMDPID=$! 
 	fi
 fi
 if [ "$JUPYTER" == "yes" ]; then
@@ -193,4 +196,7 @@ conda deactivate
 if [ "$DESTROY" == "yes" ]; then
 	cd $REPOBASE
 	rm -frd $FOLDERNAME
+fi
+if [ ! "$CMDPID" == "" ]; then
+	kill -s 9 $CMDPID
 fi
