@@ -1,5 +1,10 @@
-### LoGiCC : Local Github repo Creator and Connector
+### Octopython: Github repo fetcher and environment creater
 ----------------------------------------
+### Octopython diagram
+
+Overview of the octopython program
+
+![octopython diagram and name brainstorm](https://user-images.githubusercontent.com/31227025/126818352-9fd06c13-55a2-4876-adaa-11576cf08077.png)
 This is a program that allows you to specify the link to a github repo and then automatically download that repo to a local directory
 The program then creates a custom conda environment to run the repo locally, based either on an environment.yml file or use provided libraries
 
@@ -108,5 +113,3 @@ Then, ```cd analysis/topEFT```
 Then, ```python run.py ../../topcoffea/cfg/your_cfg.cfg```
 
 Killing the first terminal will then clean up all local files created
-### Octopython diagram
-![octopython diagram and name brainstorm](https://user-images.githubusercontent.com/31227025/126818352-9fd06c13-55a2-4876-adaa-11576cf08077.png)
