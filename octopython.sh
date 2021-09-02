@@ -7,6 +7,7 @@ DISK=0
 NAME=""
 LINK=""
 JUPYTER="no"
+PONCHO="no"
 PORT=8080
 DESTROY="no"
 CONDALIBS=""
@@ -30,6 +31,7 @@ function help {
 	echo "	-c|--condalibs: specify additional conda libs (place in quotes)"
 	echo "	-j|--jupyter: if this argument is set, the program initializes a jupyter notebook of the provided repo" 
 	echo "	-p|--port: specify jupyter port"
+	echo "  -P|--poncho: specify install using poncho"
 	exit 1
 }
 # parse command line arguments
@@ -92,6 +94,10 @@ while [[ $# -gt 0 ]]; do
 		-h|--help)
 			help
 			;;
+		-P|--poncho)
+			PONCHO="yes"
+			shift
+			;;
 		*)
 			echo "Error: Unknown option"
 			echo "Use -h or --help to display help"
@@ -147,6 +153,21 @@ else
 	git clone -b $BRANCH $LINK $REPOBASE/$FOLDERNAME
 fi
 cd $REPOBASE/$FOLDERNAME
+if [ "$PONCHO" == "yes" ]; then
+        export PATH=${PATH}:${HOME}/cctools/poncho/src
+        if [[ `command -v poncho_package_analyze` == "" ]]; then
+                echo "Error: Must have cctools/poncho installed to use poncho"
+                echo "Please install the cctools package first"
+                exit 6
+        fi
+	conda activate base
+	for i in *.py *.ipynb; do
+		echo $i
+		poncho_package_analyze $i $i.json
+	done
+	conda deactivate
+fi
+
 FILE=$REPOBASE/$FOLDERNAME/environment.yml
 # check if there is a local environment.yml file. If there is, then we can use that to determine the conda libraries required
 # if such a file does not exist, then we check if the user provided libraries as a command line input
