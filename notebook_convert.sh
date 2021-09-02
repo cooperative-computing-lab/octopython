@@ -5,4 +5,8 @@ FILENAME=${OUTFILE%.*}
 for i in *.py; do
 	FILENAME=$FILENAME\|${i%.*}
 done
-cat $INFILE | sed -nE "s/.*(import [^\^ ]+).*/\1/p" | sed -E "s/.*import ($FILENAME).*//" | tee $OUTFILE > /dev/null 2>&1
+FILENAME=$FILENAME$(cat $INFILE | sed -nE "s/.*from ([^\^ ]+) import ([^\^ ]+).*/|\2/p")
+echo $FILENAME
+cat $INFILE | sed -nE "s/.*(import [^\^ ]+).*/\1/p" | \
+	sed -E "s/.*import ($FILENAME).*//" | \
+	tee $OUTFILE > /dev/null 2>&1

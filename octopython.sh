@@ -165,7 +165,11 @@ if [ "$PONCHO" == "yes" ]; then
 		bash $SCRIPTPATH/notebook_convert.sh $i
 	done
 	poncho_package_analyze *.imp package.json
+	poncho_package_create package.json package.tar.gz
 	conda deactivate
+	mkdir -p env
+	tar -xzf package.tar.gz -C env
+	source env/bin/activate
 fi
 
 FILE=$REPOBASE/$FOLDERNAME/environment.yml
@@ -176,14 +180,15 @@ if [ ! -f "$FILE" ] && [ "$CONDALIBS" == "" ]; then
 	exit 3
 fi
 echo "****Creating local conda environment"
-if [ "$CONDALIBS" == "" ]; 
+if [ "$CONDALIBS" == "" ] && [ "$PONCHO" == "no" ]; 
 then
 	conda env create --file environment.yml --prefix ./env
+	conda activate ./env
 else
 	conda create --prefix ./env
+	conda activate ./env
 fi
-conda activate ./env
-if [ ! "$CONDALIBS" == "" ]; then
+if [ ! "$CONDALIBS" == "" ] && [ "$PONCHO" == "no" ]; then
 	echo "****Installing additional conda libraries"
 	conda install -y -c $CONDALIBS
 fi
