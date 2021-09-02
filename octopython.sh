@@ -161,10 +161,10 @@ if [ "$PONCHO" == "yes" ]; then
                 exit 6
         fi
 	conda activate base
-	for i in *.py *.ipynb; do
-		echo $i
-		poncho_package_analyze $i $i.json
+	for i in *.ipynb *.py; do
+		bash $SCRIPTPATH/notebook_convert.sh $i
 	done
+	poncho_package_analyze *.imp package.json
 	conda deactivate
 fi
 

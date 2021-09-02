@@ -1,4 +1,8 @@
 #!/bin/bash
 INFILE=$1
 OUTFILE=${INFILE%.*}.imp
-cat $INFILE | sed -nE "s/.*(import [^\^ ]+).*/\1/p" | tee $OUTFILE > /dev/null 2>&1
+FILENAME=${OUTFILE%.*}
+for i in *.py; do
+	FILENAME=$FILENAME\|${i%.*}
+done
+cat $INFILE | sed -nE "s/.*(import [^\^ ]+).*/\1/p" | sed -E "s/.*import ($FILENAME).*//" | tee $OUTFILE > /dev/null 2>&1

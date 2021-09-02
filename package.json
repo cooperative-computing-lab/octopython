@@ -1,0 +1,16 @@
+{
+    "conda": {
+        "channels": [
+            "conda-forge",
+            "defaults"
+        ],
+        "packages": [
+            "ipywidgets=7.6.3=pyhd3deb0d_0",
+            "ndcctools=7.3.1=py38h4630a5e_0",
+            "pip=20.2.4=py38h06a4308_0",
+            "python=3.8.5=h7579374_1"
+        ]
+    },
+    "name": "base",
+    "prefix": "/afs/crc.nd.edu/user/d/dsimone2/miniconda3"
+}
