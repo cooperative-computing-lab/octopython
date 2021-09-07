@@ -164,6 +164,9 @@ if [ "$PONCHO" == "yes" ]; then
 	for i in *.ipynb *.py; do
 		bash $SCRIPTPATH/notebook_convert.sh $i
 	done
+	for i in *.ipynb; do
+		echo "import jupyter" > jupyter.imp
+	done
 	poncho_package_analyze *.imp package.json
 	poncho_package_create package.json package.tar.gz
 	conda deactivate
