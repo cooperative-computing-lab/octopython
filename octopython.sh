@@ -165,13 +165,17 @@ if [ "$PONCHO" == "yes" ]; then
 		bash $SCRIPTPATH/notebook_convert.sh $i
 	done
 	for i in *.ipynb; do
-		echo "import jupyter" > jupyter.imp
+		echo 'import jupyter' > jupyter.imp
+		echo 'import ndcctools' > cctools.imp
+		echo 'import dill' > dill.imp
 	done
 	poncho_package_analyze *.imp package.json
 	poncho_package_create package.json package.tar.gz
 	conda deactivate
+	rm *.imp
 	mkdir -p env
 	tar -xzf package.tar.gz -C env
+	conda activate ./env
 	source env/bin/activate
 fi
 
@@ -183,15 +187,17 @@ if [ ! -f "$FILE" ] && [ "$CONDALIBS" == "" ]; then
 	exit 3
 fi
 echo "****Creating local conda environment"
-if [ "$CONDALIBS" == "" ] && [ "$PONCHO" == "no" ]; 
+if [ "$CONDALIBS" == "" ] && [ "$PONCHO" = "no" ]; 
 then
-	conda env create --file environment.yml --prefix ./env
-	conda activate ./env
+	echo ""
+	#conda env create --file environment.yml --prefix ./env
+	#conda activate ./env
 else
-	conda create --prefix ./env
-	conda activate ./env
+	echo ""
+	#conda create --prefix ./env
+	#conda activate ./env
 fi
-if [ ! "$CONDALIBS" == "" ] && [ "$PONCHO" == "no" ]; then
+if [ ! "$CONDALIBS" == "" ] && [ "$PONCHO" = "no" ]; then
 	echo "****Installing additional conda libraries"
 	conda install -y -c $CONDALIBS
 fi
@@ -210,6 +216,7 @@ if [[ "$NAME" != "" ]]; then
 fi
 if [ "$JUPYTER" == "yes" ]; then
 	echo "Initializing jupyter notebook on port $PORT"
+	cp /tmp/dsimone2/octopython/kernel.json /tmp/dsimone2/Octopython/work-queue-interactive/env/share/jupyter/kernels/python3/kernel.json
 	jupyter notebook --no-browser --port=$PORT
 else
 	echo "Github repo has been initalized at $REPOBASE with local conda environment ./env"
